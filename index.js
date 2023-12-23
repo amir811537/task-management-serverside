@@ -44,14 +44,14 @@ async function run() {
 
 
 
- // booking
+ // create user
  app.post("/taskusers", async (req, res) => {
     const users = req.body;
     const result = await bookingCollection.insertOne(users);
     res.send(result);
   });
 
-  // all data
+  // get all users
   app.get("/taskusers", async (req, res) => {
     const cursor = bookingCollection.find();
     const result = await cursor.toArray();
