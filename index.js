@@ -40,7 +40,7 @@ async function run() {
     // await client.connect();
 
     const bookingCollection = client.db("Hotelbooking").collection("taskusers");
-    // const bookingCollection = client.db("Hotelbooking").collection("bookings");
+    const taskCollection = client.db("Hotelbooking").collection("alltask");
 
 
 
@@ -48,6 +48,19 @@ async function run() {
  app.post("/taskusers", async (req, res) => {
     const users = req.body;
     const result = await bookingCollection.insertOne(users);
+    res.send(result);
+  });
+ app.post("/alltask", async (req, res) => {
+    const taskes = req.body;
+    const result = await taskCollection.insertOne(taskes);
+    res.send(result);
+  });
+
+
+
+  app.get("/alltask", async (req, res) => {
+    const cursor = taskCollection.find();
+    const result = await cursor.toArray();
     res.send(result);
   });
 
