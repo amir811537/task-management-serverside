@@ -58,6 +58,35 @@ async function run() {
     res.send(result);
   });
 
+  app.put("/taskusers/:id", async (req, res) => {
+    const id = req.params.id;
+    const query = { _id: new ObjectId(id) };
+  
+    try {
+      // Assuming req.body contains the fields you want to update
+      const updatedData = req.body;
+  
+      // Update the user information in the database
+      const result = await bookingCollection.updateOne(query, { $set: updatedData });
+  
+      if (result.modifiedCount > 0) {
+        res.send({ message: "User updated successfully" });
+      } else {
+        res.status(404).send({ message: "User not found or no updates applied" });
+      }
+    } catch (error) {
+      console.error("Error updating user:", error);
+      res.status(500).send({ message: "Internal server error" });
+    }
+  });
+
+  app.get("/taskusers/:id", async (req, res) => {
+    const id = req.params.id;
+    const query = { _id: new ObjectId(id) };
+    const result = await bookingCollection.findOne(query);
+    res.send(result);
+  });
+
 
 
     // Send a ping to confirm a successful connection
