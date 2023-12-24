@@ -56,7 +56,12 @@ async function run() {
     res.send(result);
   });
 
-
+  // app.delete("/users/:id", async (req, res) => {
+  //   const id = req.params.id;
+  //   const query = { _id: new ObjectId(id) };
+  //   const result = await userCollection.deleteOne(query);
+  //   res.send(result);
+  // });
 
   app.get("/alltask", async (req, res) => {
     const cursor = taskCollection.find();
@@ -92,6 +97,33 @@ async function run() {
       res.status(500).send({ message: "Internal server error" });
     }
   });
+
+  app.delete("/alltask/:id", async (req, res) => {
+    const id = req.params.id;
+    const query = { _id: new ObjectId(id) };
+    const result = await taskCollection.deleteOne(query);
+    res.send(result);
+  });
+
+  app.put("/updateTasksOrder", async (req, res) => {
+    try {
+      // Assuming req.body contains the fields you want to update
+      const updatedData = req.body;
+  
+      // Update the task order in the database
+      const result = await taskCollection.updateOne({}, { $set: updatedData });
+  
+      if (result.modifiedCount > 0) {
+        res.send({ message: "Task order updated successfully" });
+      } else {
+        res.status(404).send({ message: "No updates applied" });
+      }
+    } catch (error) {
+      console.error("Error updating task order:", error);
+      res.status(500).send({ message: "Internal server error" });
+    }
+  });
+  
 
   app.get("/taskusers/:id", async (req, res) => {
     const id = req.params.id;
