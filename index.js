@@ -105,25 +105,38 @@ async function run() {
     res.send(result);
   });
 
-  app.put("/updateTasksOrder", async (req, res) => {
-    try {
-      // Assuming req.body contains the fields you want to update
-      const updatedData = req.body;
+  // app.put("/updateTasksOrder/:id", async (req, res) => {
+  //   try {
+  //     // Assuming req.body contains the fields you want to update
+  //     const updatedData = req.body;
   
-      // Update the task order in the database
-      const result = await taskCollection.updateOne({}, { $set: updatedData });
+  //     // Update the task order in the database
+  //     const result = await taskCollection.updateOne({}, { $set: updatedData });
   
-      if (result.modifiedCount > 0) {
-        res.send({ message: "Task order updated successfully" });
-      } else {
-        res.status(404).send({ message: "No updates applied" });
+  //     if (result.modifiedCount > 0) {
+  //       res.send({ message: "Task order updated successfully" });
+  //     } else {
+  //       res.status(404).send({ message: "No updates applied" });
+  //     }
+  //   } catch (error) {
+  //     console.error("Error updating task order:", error);
+  //     res.status(500).send({ message: "Internal server error" });
+  //   }
+  // });
+  
+
+  app.patch("/alltask/:id",async(req,res)=>{
+    const {status} = req.body;
+    const id = req.params.id;
+    const query = {_id: new ObjectId(id)}
+    const updatedStatus = {
+      $set:{
+        status: status
       }
-    } catch (error) {
-      console.error("Error updating task order:", error);
-      res.status(500).send({ message: "Internal server error" });
     }
-  });
-  
+    const result = await taskCollection.updateOne(query,updatedStatus)
+    res.send(result)
+  })
 
   app.get("/taskusers/:id", async (req, res) => {
     const id = req.params.id;
