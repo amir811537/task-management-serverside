@@ -7,16 +7,10 @@ const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const port= process.env.PORT || 5000
 
 
+// Midlewares
+app.use(cors())
+app.use(express.json())
 
-// midewaare
-app.use(cors({
-  origin: [
-      'http://localhost:5173',
-  ],
-  credentials: true
-}));
-app.use(express.json());
-app.use(cookieParser());
 
 
 // const port = process.env.PORT || 5000;
