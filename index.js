@@ -35,6 +35,7 @@ async function run() {
 
     const bookingCollection = client.db("Hotelbooking").collection("taskusers");
     const taskCollection = client.db("Hotelbooking").collection("alltask");
+    const tokenCollection = client.db("Hotelbooking").collection("allUserToken");
 
 
 
@@ -44,6 +45,27 @@ async function run() {
     const result = await bookingCollection.insertOne(users);
     res.send(result);
   });
+  app.post("/allUserToken", async (req, res) => {
+    const { token } = req.body;
+  
+    try {
+      // Check if token already exists
+      const existingToken = await tokenCollection.findOne({ token });
+  
+      if (existingToken) {
+        return res.status(400).send({ message: "Token already exists." });
+      }
+  
+      // If token doesn't exist, insert the token
+      const result = await tokenCollection.insertOne({ token });
+      res.send(result);
+    } catch (error) {
+      console.error("Error inserting token:", error);
+      res.status(500).send({ message: "Internal server error" });
+    }
+  });
+  
+  
  app.post("/alltask", async (req, res) => {
     const taskes = req.body;
     const result = await taskCollection.insertOne(taskes);
@@ -59,6 +81,12 @@ async function run() {
 
   app.get("/alltask", async (req, res) => {
     const cursor = taskCollection.find();
+    const result = await cursor.toArray();
+    res.send(result);
+  });
+
+  app.get("/allUserToken", async (req, res) => {
+    const cursor = tokenCollection.find();
     const result = await cursor.toArray();
     res.send(result);
   });
